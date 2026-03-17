@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generative AI Chatbot &amp; Agent System — 24/7 Support for Product Managers</title>
+  <meta name="description" content="A multi-agent Generative AI system that helps Product Managers and Program Leaders turn early ideas into clear strategy and execution artifacts." />
+  <meta name="author" content="Subramonian Attringal" />
+  <meta name="keywords" content="Generative AI, Product Management, Agentic AI, OKR, Roadmap, Vision, User Stories, Jira, Confluence" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Generative AI Chatbot & Agent System" />
+  <meta property="og:description" content="From product idea → vision → roadmap → Jira-ready execution — powered by Agentic AI." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+  <style>
+    /* ========== DESIGN TOKENS ========== */
+    :root {
+      --primary: #2A6BD6;
+      --primary-light: #E8F0FC;
+      --gradient-start: #1A4FA0;
+      --gradient-mid: #2A6BD6;
+      --gradient-end: #5CA4F5;
+      --accent: #F5A623;
+      --accent-light: #FFF7E6;
+      --text-dark: #1B2D45;
+      --text-muted: #5C7792;
+      --text-light: #8DA2B5;
+      --bg-page: #F0F5FB;
+      --card-bg: #FFFFFF;
+      --success: #28A745;
+      --info: #0078D4;
+      --border: #E1ECF5;
+      --shadow-sm: 0 2px 8px rgba(26,79,160,.07);
+      --shadow-md: 0 4px 20px rgba(26,79,160,.10);
+      --shadow-lg: 0 8px 40px rgba(26,79,160,.14);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+    }
+    /* ========== RESET ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ========== HERO / TOP BANNER ========== */
+    .hero {
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+      color: #fff;
+      text-align: center;
+      padding: clamp(32px, 6vw, 64px) clamp(16px, 4vw, 48px);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 25% 35%, rgba(255,255,255,.12) 0%, transparent 55%),
+                  radial-gradient(circle at 75% 70%, rgba(255,255,255,.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.18);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: clamp(11px, 2.5vw, 13px);
+      font-weight: 600;
+      letter-spacing: .5px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(4px);
+    }
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -.5px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 12px rgba(0,0,0,.15);
+    }
+    .hero .subtitle {
+      font-size: clamp(14px, 3vw, 20px);
+      opacity: .92;
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .hero-pill {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: clamp(10px, 2.2vw, 13px);
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ========== CONTAINER ========== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+    }
+
+    /* ========== SECTION HEADINGS ========== */
+    .section-heading {
+      text-align: center;
+      margin: clamp(32px, 6vw, 56px) 0 clamp(20px, 4vw, 36px);
+    }
+    .section-heading h2 {
+      font-size: clamp(20px, 4vw, 32px);
+      color: var(--gradient-start);
+      font-weight: 700;
+    }
+    .section-heading p {
+      color: var(--text-muted);
+      font-size: clamp(13px, 2.5vw, 16px);
+      margin-top: 6px;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ========== ARCHITECTURE FLOW ========== */
+    .arch-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .arch-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(18px, 3vw, 28px);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .arch-card-header {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      font-weight: 700;
+      font-size: clamp(13px, 2.5vw, 16px);
+      margin: clamp(-18px, -3vw, -28px) clamp(-18px, -3vw, -28px) 16px;
+      text-align: center;
+    }
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--primary);
+      padding: 0 8px;
+      opacity: .6;
+    }
+
+    /* User Input Card */
+    .user-input-bubble {
+      background: var(--primary-light);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: clamp(12px, 2.3vw, 14px);
+      color: var(--text-dark);
+      border-left: 4px solid var(--primary);
+      line-height: 1.5;
+    }
+    .user-input-visual {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    /* Orchestrator Card */
+    .orchestrator-visual {
+      text-align: center;
+      margin: 14px 0;
+    }
+    .orchestrator-robot {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 4px 16px rgba(42,107,214,.3);
+      margin-bottom: 10px;
+    }
+    .orchestrator-label {
+      font-size: clamp(12px, 2.3vw, 14px);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .orchestrator-label strong {
+      color: var(--primary);
+    }
+
+    /* Agents Grid */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .agent-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      background: var(--primary-light);
+      border-radius: var(--radius-sm);
+      padding: 12px 6px;
+      text-align: center;
+      transition: transform .2s, box-shadow .2s;
+      cursor: default;
+      border: 1px solid transparent;
+    }
+    .agent-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+      border-color: var(--primary);
+    }
+    .agent-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .agent-chip span {
+      font-size: clamp(9px, 1.8vw, 12px);
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    /* Agent Color Variants */
+    .agent-lean .agent-icon  { background: #E3F5E1; color: #2E7D32; }
+    .agent-biz  .agent-icon  { background: #FFF3E0; color: #E65100; }
+    .agent-vp   .agent-icon  { background: #FCE4EC; color: #C62828; }
+    .agent-vis  .agent-icon  { background: #E8EAF6; color: #283593; }
+    .agent-okr  .agent-icon  { background: #FFF9C4; color: #F57F17; }
+    .agent-road .agent-icon  { background: #E0F7FA; color: #00695C; }
+    .agent-user .agent-icon  { background: #F3E5F5; color: #6A1B9A; }
+
+    /* ========== BENEFITS ========== */
+    .benefits-bar {
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 4vw, 40px) clamp(16px, 4vw, 40px);
+      margin-bottom: clamp(24px, 5vw, 48px);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .benefits-bar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .benefits-bar h3 {
+      text-align: center;
+      font-size: clamp(16px, 3vw, 22px);
+      margin-bottom: clamp(16px, 3vw, 28px);
+      font-weight: 700;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: clamp(12px, 3vw, 20px);
+    }
+    .benefit-card {
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: var(--radius-md);
+      padding: clamp(16px, 3vw, 24px);
+      text-align: center;
+      backdrop-filter: blur(4px);
+      transition: transform .2s, background .2s;
+    }
+    .benefit-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.22);
+    }
+    .benefit-icon {
+      font-size: clamp(28px, 5vw, 40px);
+      margin-bottom: 8px;
+    }
+    .benefit-card h4 {
+      font-size: clamp(13px, 2.5vw, 16px);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .benefit-card p {
+      font-size: clamp(11px, 2vw, 13px);
+      opacity: .85;
+      line-height: 1.5;
+    }
+
+    /* ========== HOW IT WORKS ========== */
+    .how-it-works {
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: clamp(14px, 3vw, 24px);
+    }
+    .step-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .step-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .step-card h4 {
+      font-size: clamp(14px, 2.5vw, 17px);
+      color: var(--gradient-start);
+      margin-bottom: 6px;
+    }
+    .step-card p {
+      font-size: clamp(12px, 2.2vw, 14px);
+      color: var(--text-muted);
+    }
+
+    /* ========== FEATURES ========== */
+    .features-section {
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(14px, 3vw, 24px);
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--primary);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .feature-card .feature-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .feature-card h4 {
+      font-size: clamp(14px, 2.5vw, 17px);
+      color: var(--gradient-start);
+      margin-bottom: 6px;
+    }
+    .feature-card p {
+      font-size: clamp(12px, 2.2vw, 14px);
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ========== AGENT DETAIL SECTION ========== */
+    .agent-details {
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .agent-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(14px, 3vw, 24px);
+    }
+    .agent-detail-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .agent-detail-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .agent-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .agent-detail-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .agent-detail-card h4 {
+      font-size: clamp(14px, 2.5vw, 17px);
+      color: var(--text-dark);
+    }
+    .agent-detail-card p {
+      font-size: clamp(12px, 2.2vw, 14px);
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .agent-output-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+    }
+
+    /* ========== ABOUT / AUTHOR ========== */
+    .about-section {
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(14px, 3vw, 24px);
+      margin-bottom: clamp(18px, 3vw, 28px);
+    }
+    .about-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .about-card h3 {
+      color: var(--gradient-start);
+      font-size: clamp(16px, 3vw, 20px);
+      margin-bottom: 10px;
+    }
+    .about-card p {
+      color: var(--text-muted);
+      font-size: clamp(13px, 2.5vw, 15px);
+      line-height: 1.7;
+    }
+    .about-card .accent {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Author bio card */
+    .author-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: clamp(24px, 4vw, 36px);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: clamp(16px, 3vw, 28px);
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .author-avatar {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(42,107,214,.25);
+    }
+    .author-info { flex: 1; min-width: 240px; }
+    .author-name {
+      font-size: clamp(17px, 3vw, 22px);
+      font-weight: 700;
+      color: var(--gradient-start);
+      margin-bottom: 2px;
+    }
+    .author-title {
+      font-style: italic;
+      color: var(--primary);
+      font-size: clamp(12px, 2.5vw, 15px);
+      margin-bottom: 14px;
+    }
+    .author-info p {
+      color: var(--text-muted);
+      font-size: clamp(13px, 2.3vw, 15px);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .author-info blockquote {
+      margin: 10px 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid var(--primary);
+      color: var(--text-dark);
+      font-style: italic;
+      font-size: clamp(13px, 2.3vw, 15px);
+    }
+    .author-connect {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+      color: #fff;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .author-connect:hover {
+      box-shadow: 0 4px 14px rgba(42,107,214,.3);
+      transform: translateY(-1px);
+    }
+
+    /* ========== TECH STACK ========== */
+    .tech-section {
+      margin-bottom: clamp(24px, 5vw, 48px);
+    }
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+    .tech-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      box-shadow: var(--shadow-sm);
+    }
+    .tech-chip .tech-emoji {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+      color: #fff;
+      text-align: center;
+      padding: clamp(20px, 4vw, 36px) 16px;
+      font-size: clamp(11px, 2.5vw, 14px);
+    }
+    footer a {
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ========== MOBILE FLOW OVERRIDE ========== */
+    @media (max-width: 820px) {
+      .arch-flow {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .arch-arrow {
+        transform: rotate(90deg);
+        padding: 6px 0;
+        font-size: 28px;
+      }
+      .agents-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .agents-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp .6s ease-out both;
+    }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+    .delay-4 { animation-delay: .4s; }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HERO ==================== -->
+  <header class="hero">
+    <div class="hero-badge">🤖 Agentic AI &bull; Multi-Agent System &bull; Product Management</div>
+    <h1>Generative AI Chatbot &amp; Agent System</h1>
+    <p class="subtitle">24/7 Support for Product Managers</p>
+    <p style="max-width:660px;margin:0 auto 20px;font-size:clamp(12px,2.5vw,15px);opacity:.88;">
+      From product idea → vision → roadmap → Jira-ready execution — powered by Agentic AI.
+    </p>
+    <div class="hero-pills">
+      <span class="hero-pill">🔹 Intent-Aware Routing</span>
+      <span class="hero-pill">🔹 Proven Frameworks</span>
+      <span class="hero-pill">🔹 Jira / Confluence Ready</span>
+      <span class="hero-pill">🔹 Scalable &amp; Measurable</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==================== ARCHITECTURE FLOW ==================== -->
+    <div class="section-heading animate-in">
+      <h2>System Architecture</h2>
+      <p>Intent-aware orchestration routes every request to the right specialist agent</p>
+    </div>
+
+    <div class="arch-flow animate-in delay-1">
+      <!-- User Input -->
+      <div class="arch-card">
+        <div class="arch-card-header">👤 User Input</div>
+        <div class="user-input-visual">
+          <div class="user-avatar">💬</div>
+          <div style="font-size:clamp(12px,2.3vw,14px);color:var(--text-muted);">Product Manager shares an idea or strategic question.</div>
+        </div>
+        <div class="user-input-bubble">
+          <em>"I have an idea for a drone delivery service for pharmacies."</em>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">➜</div>
+
+      <!-- Orchestrator -->
+      <div class="arch-card">
+        <div class="arch-card-header">🧠 Orchestrator AI Router</div>
+        <div class="orchestrator-visual">
+          <div class="orchestrator-robot">🤖</div>
+          <p class="orchestrator-label">Routes your request to the <strong>right agent</strong></p>
+        </div>
+        <p style="font-size:clamp(11px,2vw,13px);color:var(--text-muted);text-align:center;margin-top:8px;">
+          Understands intent, context &amp; stage of ideation to select the optimal specialist.
+        </p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">➜</div>
+
+      <!-- Specialist Agents -->
+      <div class="arch-card">
+        <div class="arch-card-header">⚡ Specialist Agents</div>
+        <div class="agents-grid">
+          <div class="agent-chip agent-lean">
+            <div class="agent-icon">💡</div>
+            <span>Lean Idea Architect</span>
+          </div>
+          <div class="agent-chip agent-biz">
+            <div class="agent-icon">📊</div>
+            <span>Business Modeler</span>
+          </div>
+          <div class="agent-chip agent-vp">
+            <div class="agent-icon">🎯</div>
+            <span>Value Proposition Designer</span>
+          </div>
+          <div class="agent-chip agent-vis">
+            <div class="agent-icon">🔭</div>
+            <span>Visionary</span>
+          </div>
+          <div class="agent-chip agent-okr">
+            <div class="agent-icon">📐</div>
+            <span>OKR Strategist</span>
+          </div>
+          <div class="agent-chip agent-road">
+            <div class="agent-icon">🗺️</div>
+            <span>Roadmap Planner</span>
+          </div>
+          <div class="agent-chip agent-user" style="grid-column: 2;">
+            <div class="agent-icon">📝</div>
+            <span>User Story Teller</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== KEY BENEFITS ==================== -->
+    <div class="benefits-bar animate-in delay-2">
+      <h3>🏆 Key Benefits for Product Managers</h3>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">🚀</div>
+          <h4>Faster Ideation</h4>
+          <p>Turn rough ideas into structured hypotheses in minutes, not weeks.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🔍</div>
+          <h4>Better Validation</h4>
+          <p>AI-driven frameworks surface blind spots and strengthen your case.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎯</div>
+          <h4>Clear Strategy</h4>
+          <p>Vision, OKRs, and value propositions generated with proven frameworks.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📈</div>
+          <h4>Aligned Roadmaps</h4>
+          <p>Roadmaps and user stories that connect strategy to daily execution.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <div class="how-it-works">
+      <div class="section-heading animate-in">
+        <h2>How It Works</h2>
+        <p>A seamless journey from early idea to Jira-ready execution</p>
+      </div>
+      <div class="steps-grid animate-in delay-1">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Share Your Idea</h4>
+          <p>Describe your product idea, strategic question, or initiative in natural language — no templates required.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>AI Routes &amp; Analyzes</h4>
+          <p>The Orchestrator identifies intent and delegates to the right specialist agent for deep analysis.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Get Structured Artifacts</h4>
+          <p>Receive vision statements, lean canvases, OKRs, roadmaps so that they are ready for stakeholder review.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h4>Execute in Jira</h4>
+          <p>Export Jira-ready user stories, epics, and acceptance criteria directly into your delivery workflow.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== AGENT DETAILS ==================== -->
+    <div class="agent-details">
+      <div class="section-heading animate-in">
+        <h2>Meet the Specialist Agents</h2>
+        <p>Each agent is purpose-built with domain expertise and proven product frameworks</p>
+      </div>
+      <div class="agent-detail-grid animate-in delay-1">
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#E3F5E1;color:#2E7D32;">💡</div>
+            <h4>Lean Idea Architect</h4>
+          </div>
+          <p>Transforms raw ideas into structured Lean Canvas models — problem, solution, key metrics, unfair advantage, and customer segments.</p>
+          <span class="agent-output-tag">Output: Lean Canvas</span>
+        </div>
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#FFF3E0;color:#E65100;">📊</div>
+            <h4>Business Modeler</h4>
+          </div>
+          <p>Generates Business Model Canvas artifacts covering value propositions, revenue streams, cost structures, and key partnerships.</p>
+          <span class="agent-output-tag">Output: Business Model Canvas</span>
+        </div>
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#FCE4EC;color:#C62828;">🎯</div>
+            <h4>Value Proposition Designer</h4>
+          </div>
+          <p>Maps customer jobs, pains, and gains to your product's pain relievers and gain creators using the Value Proposition Canvas.</p>
+          <span class="agent-output-tag">Output: Value Proposition Canvas</span>
+        </div>
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#E8EAF6;color:#283593;">🔭</div>
+            <h4>Visionary</h4>
+          </div>
+          <p>Crafts compelling product vision statements and strategic narratives that inspire alignment across leadership and engineering teams.</p>
+          <span class="agent-output-tag">Output: Vision &amp; Strategy Brief</span>
+        </div>
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#FFF9C4;color:#F57F17;">📐</div>
+            <h4>OKR Strategist</h4>
+          </div>
+          <p>Defines measurable Objectives &amp; Key Results aligned to product vision — ensuring strategy connects to outcomes, not just output.</p>
+          <span class="agent-output-tag">Output: OKR Framework</span>
+        </div>
+        <div class="agent-detail-card">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#E0F7FA;color:#00695C;">🗺️</div>
+            <h4>Roadmap Planner</h4>
+          </div>
+          <p>Builds outcome-driven product roadmaps with phased milestones, dependencies, and strategic themes for quarterly planning.</p>
+          <span class="agent-output-tag">Output: Product Roadmap</span>
+        </div>
+        <div class="agent-detail-card" style="grid-column: span 2;">
+          <div class="agent-detail-header">
+            <div class="agent-detail-icon" style="background:#F3E5F5;color:#6A1B9A;">📝</div>
+            <h4>User Story Teller</h4>
+          </div>
+          <p>Generates Jira-ready user stories with acceptance criteria, story points, and epic mapping — bridging strategy directly to sprint-level execution. Designed to integrate seamlessly with Jira and Confluence-style delivery workflows.</p>
+          <span class="agent-output-tag">Output: Epics, User Stories &amp; Acceptance Criteria</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== KEY FEATURES ==================== -->
+    <div class="features-section">
+      <div class="section-heading animate-in">
+        <h2>Key Capabilities</h2>
+        <p>Built with scale, repeatability, and measurable outcomes in mind</p>
+      </div>
+      <div class="features-grid animate-in delay-1">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h4>Intent-Aware Orchestration</h4>
+          <p>AI understands the stage of your idea — ideation, strategy, or execution — and routes to the right specialist agent automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h4>Proven Product Frameworks</h4>
+          <p>Outputs grounded in Lean Canvas, Business Model Canvas, Value Proposition Design, OKR methodology, and story mapping.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <h4>Jira / Confluence Integration</h4>
+          <p>Designed to integrate naturally with enterprise delivery workflows — export epics, stories, and acceptance criteria.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📐</div>
+          <h4>Repeatable &amp; Scalable</h4>
+          <p>Every agent follows a deterministic framework, ensuring consistent, high-quality artifacts across teams and domains.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TECH STACK ==================== -->
+    <div class="tech-section">
+      <div class="section-heading animate-in">
+        <h2>Technology Stack</h2>
+        <p>Modern architecture designed for extensibility and enterprise-grade reliability</p>
+      </div>
+      <div class="tech-grid animate-in delay-1">
+        <div class="tech-chip"><span class="tech-emoji">🐍</span>Python / FastAPI</div>
+        <div class="tech-chip"><span class="tech-emoji">🧠</span>LangChain / LangGraph</div>
+        <div class="tech-chip"><span class="tech-emoji">🤖</span>OpenAI / Azure OpenAI</div>
+        <div class="tech-chip"><span class="tech-emoji">⚛️</span>React / Vite</div>
+        <div class="tech-chip"><span class="tech-emoji">🐳</span>Docker / K8s</div>
+        <div class="tech-chip"><span class="tech-emoji">🔗</span>Jira REST API</div>
+      </div>
+    </div>
+
+    <!-- ==================== ABOUT & AUTHOR ==================== -->
+    <div class="about-section">
+      <div class="section-heading animate-in">
+        <h2>About This Project</h2>
+      </div>
+      <div class="about-grid animate-in delay-1">
+        <div class="about-card">
+          <h3>The Vision</h3>
+          <p>This system was born from a clear insight: <span class="accent">Product Managers and Program Leaders often spend weeks translating early ideas into actionable strategy artifacts.</span> We envision an AI copilot that accelerates this journey — from concept to execution — without sacrificing rigor or strategic depth.</p>
+        </div>
+        <div class="about-card">
+          <h3>The Approach</h3>
+          <p>Rather than one monolithic AI, this system uses <span class="accent">specialized agents</span> — each trained on proven product management frameworks. An intelligent orchestrator understands intent and delegates to the right expert, just like a high-performing product organization.</p>
+        </div>
+      </div>
+
+      <!-- Author Bio Card -->
+      <div class="author-card animate-in delay-2">
+        <div class="author-avatar">SA</div>
+        <div class="author-info">
+          <div class="author-name">Subramonian Attringal</div>
+          <div class="author-title">Product &amp; Program Leader | Enterprise Architect | AI &amp; Leadership Systems Builder</div>
+          <p>For more than a decade, Subramonian Attringal has worked at the intersection of enterprise technology, AI innovation, and product leadership. As a builder of complex cloud platforms and large-scale programs, he has collaborated with executives, engineering leaders, and global teams to transform ambitious ideas into scalable systems.</p>
+          <p>This project reflects how he approaches product and program leadership — <strong>strong mechanisms, customer focus, and bias for execution</strong> — augmented with Agentic AI to accelerate the journey from vision to value.</p>
+          <blockquote>
+            What if every Product Manager had an AI-powered team of specialists available 24/7 — from ideation through Jira-ready execution?
+          </blockquote>
+          <p>He is actively exploring Senior / Principal Product or Technical Program roles across SaaS, Platform, and AI Agent-driven teams — building the next generation of product platforms.</p>
+          <a class="author-connect" href="https://www.linkedin.com/in/subramonian-attringal/" target="_blank" rel="noopener noreferrer">
+            🔗 Connect on LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/sattringal1/gen-ai-product-manager" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      <a href="https://www.linkedin.com/in/subramonian-attringal/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+    <p>&copy; 2026 Subramonian Attringal. All rights reserved.</p>
+    <p style="margin-top:6px;opacity:.7;font-size:11px;">Generative AI Chatbot &amp; Agent System — A Proof of Concept</p>
+  </footer>
+
+</body>
+</html>
