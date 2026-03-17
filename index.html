@@ -48,7 +48,10 @@
       line-height: 1.6;
       -webkit-text-size-adjust: 100%;
       overflow-x: hidden;
+      min-width: 0;
     }
+    img, svg, video, canvas { max-width: 100%; height: auto; }
+    input, button, textarea, select { font: inherit; }
 
     /* ========== HERO / TOP BANNER ========== */
     .hero {
@@ -118,6 +121,7 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 0 clamp(16px, 4vw, 40px);
+      width: 100%;
     }
 
     /* ========== SECTION HEADINGS ========== */
@@ -282,6 +286,7 @@
     .agent-okr  .agent-icon  { background: #FFF9C4; color: #F57F17; }
     .agent-road .agent-icon  { background: #E0F7FA; color: #00695C; }
     .agent-user .agent-icon  { background: #F3E5F5; color: #6A1B9A; }
+    .agent-user-centered     { grid-column: 2; }
 
     /* ========== BENEFITS ========== */
     .benefits-bar {
@@ -631,27 +636,300 @@
       flex-wrap: wrap;
     }
 
-    /* ========== MOBILE FLOW OVERRIDE ========== */
-    @media (max-width: 820px) {
+    /* ==========================================================
+       RESPONSIVE BREAKPOINTS — auto-adjusts to any screen size
+       ========================================================== */
+
+    /* --- Tablet Landscape & Small Desktop (≤1024px) --- */
+    @media (max-width: 1024px) {
       .arch-flow {
         grid-template-columns: 1fr;
         gap: 0;
       }
       .arch-arrow {
         transform: rotate(90deg);
-        padding: 6px 0;
+        padding: 8px 0;
+        font-size: 28px;
+      }
+      .agents-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .agent-detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .agent-detail-card[style*="grid-column"] {
+        grid-column: span 2;
+      }
+    }
+
+    /* --- Tablet Portrait (≤768px) --- */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 16px;
+      }
+      .hero h1 {
+        font-size: clamp(20px, 5vw, 32px);
+      }
+      .hero-pills {
+        gap: 6px;
+      }
+      .hero-pill {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+      .agents-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .agent-chip {
+        padding: 10px 4px;
+      }
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .agent-detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .agent-detail-card[style*="grid-column"] {
+        grid-column: span 1;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+      .author-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .author-info {
+        min-width: 0;
+        width: 100%;
+      }
+      .author-info blockquote {
+        text-align: left;
+      }
+      .tech-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .user-input-visual {
+        flex-direction: column;
+        text-align: center;
+      }
+      .agent-user-centered {
+        grid-column: auto;
+      }
+    }
+
+    /* --- Mobile Large (≤600px) --- */
+    @media (max-width: 600px) {
+      .hero-badge {
+        font-size: 11px;
+        padding: 5px 12px;
+      }
+      .benefits-bar {
+        padding: 20px 14px;
+        border-radius: var(--radius-md);
+      }
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .benefit-card {
+        padding: 14px 10px;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .section-heading {
+        margin: 28px 0 16px;
+      }
+    }
+
+    /* --- Mobile (≤480px) --- */
+    @media (max-width: 480px) {
+      .hero {
+        padding: 24px 12px;
+      }
+      .hero h1 {
+        font-size: 20px;
+        letter-spacing: 0;
+      }
+      .hero .subtitle {
+        font-size: 13px;
+      }
+      .hero-pills {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        background: none;
+        padding: 0;
+      }
+      .hero-pill {
+        width: 100%;
+        justify-content: center;
+        background: rgba(255,255,255,.12);
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+      .container {
+        padding: 0 12px;
+      }
+      .arch-card {
+        padding: 14px;
+      }
+      .arch-card-header {
+        margin: -14px -14px 12px;
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+      .orchestrator-robot {
+        width: 56px;
+        height: 56px;
         font-size: 28px;
       }
       .agents-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
       }
-    }
-    @media (max-width: 480px) {
-      .agents-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .agent-chip {
+        padding: 8px 4px;
+      }
+      .agent-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 15px;
       }
       .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+      .benefit-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        padding: 12px 14px;
+      }
+      .benefit-icon {
+        font-size: 28px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+      .benefit-card h4, .benefit-card p {
+        margin: 0;
+      }
+      .step-card {
+        padding: 16px;
+      }
+      .feature-card {
+        padding: 16px;
+      }
+      .agent-detail-card {
+        padding: 16px;
+      }
+      .author-card {
+        padding: 18px 14px;
+      }
+      .author-avatar {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+      }
+      .author-connect {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 16px;
+      }
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .tech-chip {
+        padding: 10px 6px;
+        font-size: 12px;
+      }
+      footer {
+        padding: 16px 12px;
+      }
+      footer .footer-links {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    /* --- Extra Small (≤360px) --- */
+    @media (max-width: 360px) {
+      .hero h1 {
+        font-size: 18px;
+      }
+      .hero .subtitle {
+        font-size: 12px;
+      }
+      .hero-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+      }
+      .agents-grid {
         grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+      .agent-chip span {
+        font-size: 9px;
+      }
+      .section-heading h2 {
+        font-size: 18px;
+      }
+      .author-name {
+        font-size: 16px;
+      }
+    }
+
+    /* --- Landscape phones (short height) --- */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .hero {
+        padding: 16px 20px;
+      }
+      .hero h1 {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .hero .subtitle {
+        margin-bottom: 10px;
+      }
+      .hero-pills {
+        gap: 6px;
+      }
+    }
+
+    /* --- Print --- */
+    @media print {
+      .hero { background: #2A6BD6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .benefits-bar { background: #2A6BD6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .arch-flow { grid-template-columns: 1fr; }
+      .arch-arrow { transform: rotate(90deg); }
+      body { font-size: 12pt; }
+    }
+
+    /* --- Touch device optimizations --- */
+    @media (hover: none) and (pointer: coarse) {
+      .agent-chip, .benefit-card, .feature-card, .agent-detail-card, .step-card {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .agent-chip:hover, .benefit-card:hover, .feature-card:hover, .agent-detail-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-sm);
+      }
+      .author-connect {
+        min-height: 44px;
       }
     }
 
@@ -754,7 +1032,7 @@
             <div class="agent-icon">🗺️</div>
             <span>Roadmap Planner</span>
           </div>
-          <div class="agent-chip agent-user" style="grid-column: 2;">
+          <div class="agent-chip agent-user agent-user-centered">
             <div class="agent-icon">📝</div>
             <span>User Story Teller</span>
           </div>
