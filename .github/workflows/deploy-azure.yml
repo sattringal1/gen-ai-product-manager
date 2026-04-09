@@ -35,10 +35,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Authenticate Docker to ACR
+      - name: Authenticate Docker to ACR via Azure token
         run: |
           ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)
           ACR_TOKEN=$(az acr login --name ${{ env.ACR_NAME }} --expose-token --query accessToken -o tsv)
+          echo "::add-mask::$ACR_TOKEN"
           echo "$ACR_TOKEN" | docker login "$ACR_SERVER" \
             --username 00000000-0000-0000-0000-000000000000 \
             --password-stdin
@@ -87,13 +88,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Get ACR credentials
+      - name: Get ACR credentials (masked)
         run: |
-          echo "ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)" >> $GITHUB_ENV
-          echo "ACR_USER=$(az acr credential show --name ${{ env.ACR_NAME }} --query username -o tsv)" >> $GITHUB_ENV
-          echo "ACR_PASS=$(az acr credential show --name ${{ env.ACR_NAME }} --query passwords[0].value -o tsv)" >> $GITHUB_ENV
+          ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)
+          ACR_USER=$(az acr credential show --name ${{ env.ACR_NAME }} --query username -o tsv)
+          ACR_PASS=$(az acr credential show --name ${{ env.ACR_NAME }} --query passwords[0].value -o tsv)
+          echo "::add-mask::$ACR_PASS"
+          echo "ACR_SERVER=$ACR_SERVER" >> $GITHUB_ENV
+          echo "ACR_USER=$ACR_USER"     >> $GITHUB_ENV
+          echo "ACR_PASS=$ACR_PASS"     >> $GITHUB_ENV
 
-      - name: Deploy backend
+      - name: Generate app secret key
+        run: |
+          APP_SECRET=$(openssl rand -hex 32)
+          echo "::add-mask::$APP_SECRET"
+          echo "APP_SECRET=$APP_SECRET" >> $GITHUB_ENV
+
+      - name: Deploy backend Container App
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
@@ -110,10 +121,18 @@ jobs:
             OPENAI_MODEL=gpt-4o
             APP_ENV=production
             LOG_LEVEL=INFO
-            OPENAI_API_KEY=secretref:openai-key
-            SECRET_KEY=secretref:app-secret-key
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            SECRET_KEY=${{ env.APP_SECRET }}
+            JIRA_BASE_URL=${{ secrets.JIRA_BASE_URL }}
+            JIRA_EMAIL=${{ secrets.JIRA_EMAIL }}
+            JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
+            JIRA_PROJECT_KEY=${{ secrets.JIRA_PROJECT_KEY }}
+            CONFLUENCE_BASE_URL=${{ secrets.CONFLUENCE_BASE_URL }}
+            CONFLUENCE_EMAIL=${{ secrets.CONFLUENCE_EMAIL }}
+            CONFLUENCE_API_TOKEN=${{ secrets.CONFLUENCE_API_TOKEN }}
+            CONFLUENCE_SPACE_KEY=${{ secrets.CONFLUENCE_SPACE_KEY }}
 
-      - name: Deploy frontend
+      - name: Deploy frontend Container App
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
