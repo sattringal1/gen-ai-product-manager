@@ -104,6 +104,27 @@ jobs:
           echo "::add-mask::$APP_SECRET"
           echo "APP_SECRET=$APP_SECRET" >> $GITHUB_ENV
 
+      - name: Get frontend FQDN for CORS
+        run: |
+          # Get frontend hostname so backend allows requests from it
+          FRONTEND_FQDN=$(az containerapp show \
+            --name ${{ env.FRONTEND_APP }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
+          if [ -n "$FRONTEND_FQDN" ]; then
+            CORS="https://${FRONTEND_FQDN},http://localhost:5173,http://localhost:3000"
+          else
+            CORS="http://localhost:5173,http://localhost:3000"
+          fi
+          echo "CORS_ORIGINS=$CORS" >> $GITHUB_ENV
+
+          # Get backend internal FQDN for nginx proxy
+          BACKEND_FQDN=$(az containerapp show \
+            --name ${{ env.BACKEND_APP }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "genai-pm-backend")
+          echo "BACKEND_FQDN=$BACKEND_FQDN" >> $GITHUB_ENV
+
       - name: Deploy backend Container App
         uses: azure/container-apps-deploy-action@v1
         with:
@@ -123,6 +144,7 @@ jobs:
             LOG_LEVEL=INFO
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             SECRET_KEY=${{ env.APP_SECRET }}
+            CORS_ORIGINS=${{ env.CORS_ORIGINS }}
             JIRA_BASE_URL=${{ secrets.JIRA_BASE_URL }}
             JIRA_EMAIL=${{ secrets.JIRA_EMAIL }}
             JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
@@ -145,7 +167,7 @@ jobs:
           targetPort:              80
           ingress:                 external
           environmentVariables: >
-            BACKEND_HOST=genai-pm-backend
+            BACKEND_HOST=${{ env.BACKEND_FQDN }}
             BACKEND_PORT=80
 
       - name: Print live URL
