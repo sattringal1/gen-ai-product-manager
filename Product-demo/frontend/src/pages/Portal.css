@@ -1,0 +1,144 @@
+.portal-wide { max-width: 1200px; }
+
+.portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.form-hint {
+  font-size: 0.82rem;
+  color: var(--error);
+  margin-top: 4px;
+}
+
+/* Examples */
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.examples-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.example-chip {
+  padding: 4px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.example-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #EFF6FF;
+}
+
+/* Integration toggle */
+.options-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  align-self: flex-start;
+}
+
+.options-toggle:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #EFF6FF;
+}
+
+.options-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--error);
+  color: var(--error);
+  background: #FEF2F2;
+}
+
+/* Error banner */
+.error-banner {
+  margin-top: 20px;
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+  color: #DC2626;
+  padding: 16px;
+}

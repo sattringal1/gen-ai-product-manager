@@ -1,0 +1,162 @@
+.agent-selector-multi {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Select-all header ── */
+.agent-select-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.select-all-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.agent-count-pill {
+  padding: 3px 12px;
+  background: #EFF6FF;
+  color: var(--primary);
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* ── Custom checkbox ── */
+.custom-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.custom-checkbox .checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  background: white;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: 2px solid white;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+/* ── Agent grid ── */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+/* ── Agent card ── */
+.agent-card-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  user-select: none;
+}
+
+.agent-card-check:hover {
+  border-color: #94A3B8;
+  background: #F8FAFC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.agent-card-check.selected {
+  border-color: var(--ac, var(--primary));
+  background: color-mix(in srgb, var(--ac, var(--primary)) 6%, white);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--ac, var(--primary)) 18%, transparent);
+}
+
+.agent-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.agent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agent-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.selected-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .agent-grid { grid-template-columns: 1fr 1fr; }
+}

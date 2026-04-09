@@ -1,0 +1,63 @@
+# ===========================================
+# Gen-AI Product Manager — .gitignore
+# ===========================================
+
+# ── Secrets (NEVER commit) ──────────────────
+.env
+*.env.local
+*.env.production
+*.env.staging
+
+# ── Python ─────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# ── Node / Frontend ─────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+*.tsbuildinfo
+.npm
+
+# ── Docker ──────────────────────────────────
+# (docker-compose.yml is intentionally committed)
+
+# ── IDEs & Editors ──────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS ──────────────────────────────────────
+.DS_Store
+ehthumbs.db
+Desktop.ini
+
+# ── Kubernetes secrets (use sealed secrets in prod) ─
+k8s/secret.yaml

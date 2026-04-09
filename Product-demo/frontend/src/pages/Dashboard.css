@@ -1,0 +1,14 @@
+.dashboard .dash-section { margin-bottom: 32px; }
+.dashboard .dash-section h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; }
+.health-card { display: flex; flex-direction: column; gap: 12px; }
+.health-row { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+.agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.agent-status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.agent-status p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+.agent-id { font-size: 0.75rem; color: var(--text-muted); background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+.checklist { display: flex; flex-direction: column; gap: 16px; }
+.checklist-item { display: flex; align-items: flex-start; gap: 14px; }
+.checklist-icon { font-size: 1.2rem; }
+.checklist-item strong { font-size: 0.9rem; display: block; margin-bottom: 2px; }
+.checklist-item p { font-size: 0.82rem; color: var(--text-muted); }
+.checklist-item code { background: var(--bg); padding: 1px 5px; border-radius: 4px; font-size: 0.78rem; }

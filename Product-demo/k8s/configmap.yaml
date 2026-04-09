@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genai-pm-config
+  namespace: genai-pm
+data:
+  APP_ENV: "production"
+  APP_PORT: "8000"
+  LLM_PROVIDER: "openai"
+  OPENAI_MODEL: "gpt-4o"
+  JIRA_BASE_URL: "https://your-org.atlassian.net"
+  JIRA_EMAIL: "your-service-account@company.com"
+  JIRA_PROJECT_KEY: "PM"
+  CONFLUENCE_BASE_URL: "https://your-org.atlassian.net/wiki"
+  CONFLUENCE_EMAIL: "your-service-account@company.com"
+  CONFLUENCE_SPACE_KEY: "PROD"
+  CORS_ORIGINS: "https://your-domain.com"
+  LOG_LEVEL: "INFO"

@@ -1,0 +1,38 @@
+.results { margin-top: 32px; }
+.results-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+.results-header h2 { font-size: 1.3rem; font-weight: 700; }
+.results-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.results-body { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+
+.json-viewer {
+  background: #0F172A; color: #E2E8F0;
+  padding: 24px; overflow-x: auto;
+  font-size: 0.8rem; line-height: 1.7;
+  border-radius: var(--radius);
+}
+
+/* User Stories */
+.epic-header { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.epic-header h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+.epic-header p { color: var(--text-muted); font-size: 0.9rem; }
+.stories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; padding: 20px; }
+.story-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.story-header { display: flex; justify-content: space-between; align-items: center; }
+.story-points { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+.story-card h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+.story-body { font-size: 0.88rem; color: var(--text-muted); }
+.ac-list { font-size: 0.8rem; }
+.ac-list strong { display: block; margin-bottom: 6px; color: var(--text); }
+.ac-item { margin-bottom: 6px; line-height: 1.4; color: var(--text-muted); }
+.ac-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  background: #EFF6FF; color: var(--primary); font-weight: 700;
+  font-size: 0.7rem; margin-right: 4px;
+}
+.story-labels { display: flex; gap: 6px; flex-wrap: wrap; }
