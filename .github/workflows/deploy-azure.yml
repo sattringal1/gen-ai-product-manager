@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   RESOURCE_GROUP: rg-genai-pm
   ACR_NAME:       genaipmacr
   BACKEND_APP:    genai-pm-backend
@@ -29,12 +30,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Log in to Azure (service principal)
+      - name: Log in to Azure
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type:       SERVICE_PRINCIPAL
 
-      - name: Authenticate Docker to ACR via Azure token
+      - name: Authenticate Docker to ACR
         run: |
           ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)
           ACR_TOKEN=$(az acr login --name ${{ env.ACR_NAME }} --expose-token --query accessToken -o tsv)
@@ -84,15 +89,19 @@ jobs:
       - name: Log in to Azure
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type:       SERVICE_PRINCIPAL
 
-      - name: Get ACR credentials for Container Apps
+      - name: Get ACR credentials
         run: |
           echo "ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --query loginServer -o tsv)" >> $GITHUB_ENV
           echo "ACR_USER=$(az acr credential show --name ${{ env.ACR_NAME }} --query username -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASS=$(az acr credential show --name ${{ env.ACR_NAME }} --query passwords[0].value -o tsv)" >> $GITHUB_ENV
 
-      - name: Deploy backend Container App
+      - name: Deploy backend
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
@@ -111,16 +120,8 @@ jobs:
             LOG_LEVEL=INFO
             OPENAI_API_KEY=secretref:openai-key
             SECRET_KEY=secretref:app-secret-key
-            JIRA_BASE_URL=${{ secrets.JIRA_BASE_URL }}
-            JIRA_EMAIL=${{ secrets.JIRA_EMAIL }}
-            JIRA_API_TOKEN=secretref:jira-api-token
-            JIRA_PROJECT_KEY=${{ secrets.JIRA_PROJECT_KEY }}
-            CONFLUENCE_BASE_URL=${{ secrets.CONFLUENCE_BASE_URL }}
-            CONFLUENCE_EMAIL=${{ secrets.CONFLUENCE_EMAIL }}
-            CONFLUENCE_API_TOKEN=secretref:confluence-api-token
-            CONFLUENCE_SPACE_KEY=${{ secrets.CONFLUENCE_SPACE_KEY }}
 
-      - name: Deploy frontend Container App
+      - name: Deploy frontend
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
@@ -146,6 +147,5 @@ jobs:
           echo "| | |"                  >> $GITHUB_STEP_SUMMARY
           echo "|---|---|"              >> $GITHUB_STEP_SUMMARY
           echo "| **Live URL** | https://${URL}/portal |" >> $GITHUB_STEP_SUMMARY
-          echo "| **SHA** | \`${{ github.sha }}\` |"     >> $GITHUB_STEP_SUMMARY
           echo "| **Time** | $(date -u) |"               >> $GITHUB_STEP_SUMMARY
           echo "Live at: https://${URL}/portal"
