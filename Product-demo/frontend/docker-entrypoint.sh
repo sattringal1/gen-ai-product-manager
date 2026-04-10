@@ -1,16 +1,9 @@
 #!/bin/sh
-# Inject BACKEND_URL into nginx config at container start.
-# In Azure: BACKEND_URL = https://genai-pm-backend.<env>.azurecontainerapps.io
-# Locally:  not set — React falls back to /api/v1 (Vite proxy)
+# Copy nginx config and start server.
+# BACKEND_URL is hardcoded in nginx.template.conf for Azure deployment.
 
-BACKEND_URL="${BACKEND_URL:-}"
+cp /etc/nginx/templates/nginx.template.conf /etc/nginx/conf.d/default.conf
 
-export BACKEND_URL
-
-envsubst '${BACKEND_URL}' \
-  < /etc/nginx/templates/nginx.template.conf \
-  > /etc/nginx/conf.d/default.conf
-
-echo "[entrypoint] BACKEND_URL = ${BACKEND_URL:-not set, using relative /api/v1}"
+echo "[entrypoint] Starting nginx with hardcoded backend URL"
 
 exec nginx -g 'daemon off;'
