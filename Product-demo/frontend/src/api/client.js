@@ -33,7 +33,8 @@ export const getAgents = async () => {
 }
 
 export const getHealth = async () => {
-  const { data } = await api.get('/health')
+  const baseURL = window.__RUNTIME_CONFIG__?.BACKEND_URL || ''
+  const { data } = await axios.get(`${baseURL}/health`, { timeout: 10000 })
   return data
 }
 
