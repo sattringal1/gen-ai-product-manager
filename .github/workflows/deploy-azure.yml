@@ -104,20 +104,7 @@ jobs:
           echo "::add-mask::$APP_SECRET"
           echo "APP_SECRET=$APP_SECRET" >> $GITHUB_ENV
 
-      - name: Get backend internal FQDN
-        run: |
-          # CORS: allow all azurecontainerapps.io origins — handled by allow_origin_regex in FastAPI
-          echo "CORS_ORIGINS=https://genai-pm-frontend.blackpond-cceed3d9.westus2.azurecontainerapps.io" >> $GITHUB_ENV
-
-          # Internal FQDN: <app>.internal.<env-default-domain>, port 443 (HTTPS required internally)
-          ENV_DOMAIN=$(az containerapp env show \
-            --name ${{ env.CONTAINER_ENV }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --query "properties.defaultDomain" -o tsv)
-          echo "BACKEND_HOST=genai-pm-backend.internal.${ENV_DOMAIN}" >> $GITHUB_ENV
-          echo "BACKEND_PORT=443" >> $GITHUB_ENV
-
-      - name: Deploy backend Container App
+      - name: Deploy backend (external ingress)
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
@@ -128,7 +115,7 @@ jobs:
           registryUsername:        ${{ env.ACR_USER }}
           registryPassword:        ${{ env.ACR_PASS }}
           targetPort:              8000
-          ingress:                 internal
+          ingress:                 external
           environmentVariables: >
             LLM_PROVIDER=openai
             OPENAI_MODEL=gpt-4o
@@ -136,7 +123,7 @@ jobs:
             LOG_LEVEL=INFO
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             SECRET_KEY=${{ env.APP_SECRET }}
-            CORS_ORIGINS=${{ env.CORS_ORIGINS }}
+            CORS_ORIGINS=https://genai-pm-frontend.blackpond-cceed3d9.westus2.azurecontainerapps.io
             JIRA_BASE_URL=${{ secrets.JIRA_BASE_URL }}
             JIRA_EMAIL=${{ secrets.JIRA_EMAIL }}
             JIRA_API_TOKEN=${{ secrets.JIRA_API_TOKEN }}
@@ -146,7 +133,17 @@ jobs:
             CONFLUENCE_API_TOKEN=${{ secrets.CONFLUENCE_API_TOKEN }}
             CONFLUENCE_SPACE_KEY=${{ secrets.CONFLUENCE_SPACE_KEY }}
 
-      - name: Deploy frontend Container App
+      - name: Get backend public FQDN (after deploy)
+        run: |
+          BACKEND_FQDN=$(az containerapp show \
+            --name ${{ env.BACKEND_APP }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "properties.configuration.ingress.fqdn" -o tsv)
+          echo "BACKEND_HOST=${BACKEND_FQDN}" >> $GITHUB_ENV
+          echo "BACKEND_PORT=443" >> $GITHUB_ENV
+          echo "Backend FQDN: ${BACKEND_FQDN}"
+
+      - name: Deploy frontend (nginx proxies to backend public URL)
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
