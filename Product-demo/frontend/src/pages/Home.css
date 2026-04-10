@@ -9,7 +9,7 @@
 .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .hero .btn-primary { background: white; color: var(--primary); }
 .hero .btn-primary:hover { background: #F0F7FF; }
-.hero .btn-secondary { border-color: white; color: white; }
+.hero .btn-secondary { background: transparent; border-color: white; color: white; }
 .hero .btn-secondary:hover { background: white; color: var(--primary); }
 
 .features-grid {
