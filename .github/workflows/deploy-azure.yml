@@ -104,23 +104,12 @@ jobs:
           echo "::add-mask::$APP_SECRET"
           echo "APP_SECRET=$APP_SECRET" >> $GITHUB_ENV
 
-      - name: Get FQDNs for CORS and backend proxy
+      - name: Get backend internal FQDN
         run: |
-          # Frontend public FQDN — needed for CORS allow-list on backend
-          FRONTEND_FQDN=$(az containerapp show \
-            --name ${{ env.FRONTEND_APP }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
-          if [ -n "$FRONTEND_FQDN" ]; then
-            CORS="https://${FRONTEND_FQDN},http://localhost:5173,http://localhost:3000"
-          else
-            CORS="http://localhost:5173,http://localhost:3000"
-          fi
-          echo "CORS_ORIGINS=$CORS" >> $GITHUB_ENV
+          # CORS: allow all azurecontainerapps.io origins — handled by allow_origin_regex in FastAPI
+          echo "CORS_ORIGINS=https://genai-pm-frontend.blackpond-cceed3d9.westus2.azurecontainerapps.io" >> $GITHUB_ENV
 
-          # Azure Container Apps internal ingress requires HTTPS even for intra-env calls.
-          # The internal FQDN format is: <app>.internal.<env-default-domain>
-          # We proxy to this over HTTPS port 443 with ssl_verify off (internal cert).
+          # Internal FQDN: <app>.internal.<env-default-domain>, port 443 (HTTPS required internally)
           ENV_DOMAIN=$(az containerapp env show \
             --name ${{ env.CONTAINER_ENV }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \

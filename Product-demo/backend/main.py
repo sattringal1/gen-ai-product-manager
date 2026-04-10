@@ -24,10 +24,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_cors_origins = settings.cors_origins_list
+# In production allow all origins if none explicitly configured
+if settings.app_env == "production" and not _cors_origins:
+    _cors_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
+    allow_origins=_cors_origins if "*" not in _cors_origins else ["*"],
+    allow_origin_regex=r"https://.*\.azurecontainerapps\.io" if settings.app_env == "production" else None,
+    allow_credentials="*" not in _cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
