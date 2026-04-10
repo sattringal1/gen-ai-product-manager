@@ -133,17 +133,16 @@ jobs:
             CONFLUENCE_API_TOKEN=${{ secrets.CONFLUENCE_API_TOKEN }}
             CONFLUENCE_SPACE_KEY=${{ secrets.CONFLUENCE_SPACE_KEY }}
 
-      - name: Get backend public FQDN (after deploy)
+      - name: Get backend public URL (after deploy)
         run: |
           BACKEND_FQDN=$(az containerapp show \
             --name ${{ env.BACKEND_APP }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query "properties.configuration.ingress.fqdn" -o tsv)
-          echo "BACKEND_HOST=${BACKEND_FQDN}" >> $GITHUB_ENV
-          echo "BACKEND_PORT=443" >> $GITHUB_ENV
-          echo "Backend FQDN: ${BACKEND_FQDN}"
+          echo "BACKEND_URL=https://${BACKEND_FQDN}" >> $GITHUB_ENV
+          echo "Backend URL: https://${BACKEND_FQDN}"
 
-      - name: Deploy frontend (nginx proxies to backend public URL)
+      - name: Deploy frontend
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup:           ${{ env.RESOURCE_GROUP }}
@@ -156,8 +155,7 @@ jobs:
           targetPort:              80
           ingress:                 external
           environmentVariables: >
-            BACKEND_HOST=${{ env.BACKEND_HOST }}
-            BACKEND_PORT=${{ env.BACKEND_PORT }}
+            BACKEND_URL=${{ env.BACKEND_URL }}
 
       - name: Print live URL
         run: |

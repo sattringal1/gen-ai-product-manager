@@ -1,16 +1,16 @@
 #!/bin/sh
-# Substitute BACKEND_HOST and BACKEND_PORT into nginx config at container start.
-# Defaults work for local Docker Compose; Azure overrides via environment variables.
+# Inject BACKEND_URL into nginx config at container start.
+# In Azure: BACKEND_URL = https://genai-pm-backend.<env>.azurecontainerapps.io
+# Locally:  not set — React falls back to /api/v1 (Vite proxy)
 
-BACKEND_HOST="${BACKEND_HOST:-backend}"
-BACKEND_PORT="${BACKEND_PORT:-8000}"
+BACKEND_URL="${BACKEND_URL:-}"
 
-export BACKEND_HOST BACKEND_PORT
+export BACKEND_URL
 
-envsubst '${BACKEND_HOST} ${BACKEND_PORT}' \
+envsubst '${BACKEND_URL}' \
   < /etc/nginx/templates/nginx.template.conf \
   > /etc/nginx/conf.d/default.conf
 
-echo "[entrypoint] Backend proxy → http://${BACKEND_HOST}:${BACKEND_PORT}"
+echo "[entrypoint] BACKEND_URL = ${BACKEND_URL:-not set, using relative /api/v1}"
 
 exec nginx -g 'daemon off;'
