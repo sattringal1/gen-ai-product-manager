@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field
+import re
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Literal, Any
 from enum import Enum
 
@@ -19,8 +20,14 @@ class ProcessRequest(BaseModel):
     agent: AgentType = Field(AgentType.AUTO, description="Which agent to invoke; AUTO lets orchestrator decide")
     push_to_jira: bool = Field(False, description="Push user stories to Jira on completion")
     push_to_confluence: bool = Field(False, description="Publish output to Confluence on completion")
-    jira_project_key: Optional[str] = None
-    confluence_space_key: Optional[str] = None
+    jira_project_key: Optional[str] = Field(None, max_length=20, pattern=r'^[A-Z0-9]+$')
+    confluence_space_key: Optional[str] = Field(None, max_length=20, pattern=r'^[A-Z0-9]+$')
+
+    @field_validator("idea")
+    @classmethod
+    def strip_control_characters(cls, v: str) -> str:
+        # Remove null bytes and non-printable control chars (keep newlines/tabs)
+        return re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', v).strip()
 
 
 class LeanCanvas(BaseModel):

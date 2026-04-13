@@ -26,10 +26,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins_list if settings.app_env == "production" else ["*"],
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 orchestrator = Orchestrator()
@@ -51,7 +51,7 @@ async def process_idea(req: ProcessRequest):
         return result
     except Exception as exc:
         log.error("process_failed", error=str(exc))
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise HTTPException(status_code=500, detail="An internal error occurred. Please try again.")
 
 
 @app.get("/api/v1/agents", tags=["Agents"])
@@ -72,4 +72,4 @@ async def list_agents():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=settings.app_port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=settings.app_port, reload=settings.app_env != "production")

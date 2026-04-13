@@ -109,6 +109,6 @@ class JiraClient:
                 log.info("jira_story_created", key=key)
 
         except httpx.HTTPError as exc:
-            log.error("jira_error", error=str(exc))
+            log.error("jira_error", error=type(exc).__name__, status=getattr(exc.response, 'status_code', None) if hasattr(exc, 'response') else None)
 
         return keys

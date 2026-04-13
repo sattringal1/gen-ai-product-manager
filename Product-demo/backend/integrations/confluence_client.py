@@ -1,6 +1,7 @@
 """
 Confluence REST API v2 integration — publishes AI output as a page.
 """
+import html
 import httpx
 import base64
 import structlog
@@ -33,7 +34,7 @@ class ConfluenceClient:
             return None
 
         space = space_key or self.space
-        html_body = f"<pre>{body}</pre>"
+        html_body = f"<pre>{html.escape(body)}</pre>"
 
         payload = {
             "type": "page",
@@ -57,5 +58,5 @@ class ConfluenceClient:
                 log.info("confluence_page_created", url=url)
                 return url
         except httpx.HTTPError as exc:
-            log.error("confluence_error", error=str(exc))
+            log.error("confluence_error", error=type(exc).__name__, status=getattr(exc.response, 'status_code', None) if hasattr(exc, 'response') else None)
             return None
